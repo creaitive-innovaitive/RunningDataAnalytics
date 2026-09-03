@@ -181,6 +181,41 @@
       </div>
     </div>
 
+    <div class="plan-sliders">
+      <div class="plan-sliders-title">Weekly schedule</div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Long run</span>
+        <select class="plan-schedule-select" id="sl-day-long" data-role="long">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun" selected>Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Intervals</span>
+        <select class="plan-schedule-select" id="sl-day-intervals" data-role="intervals">
+          <option value="Mon">Monday</option><option value="Tue" selected>Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Easy run</span>
+        <select class="plan-schedule-select" id="sl-day-easy" data-role="easy">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed" selected>Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Threshold / tempo</span>
+        <select class="plan-schedule-select" id="sl-day-tempo" data-role="tempo">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri" selected>Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Strength</span>
+        <select class="plan-schedule-select" id="sl-day-strength" data-role="strength">
+          <option value="" selected>None — I'll do my own</option><option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-note">Remaining days are rest. Picking a day already in use swaps it with whichever session had it. This applies to the Base, Build and Sharpen phases — Taper stays fixed around race day.</div>
+    </div>
+
     <div class="plan-metrics">
       <div class="plan-metric"><div class="plan-metric-label">Race pace</div><div class="plan-metric-val" id="pm-race">5:00</div><div class="plan-metric-sub">per km target</div></div>
       <div class="plan-metric"><div class="plan-metric-label">Intervals</div><div class="plan-metric-val" id="pm-int">4:50</div><div class="plan-metric-sub">per km · sharpen phase</div></div>
@@ -325,6 +360,41 @@
         <input type="range" id="h-sl-weeks" min="8" max="30" value="28" step="1">
         <span class="plan-slider-val" id="h-sv-weeks">28 wks</span>
       </div>
+    </div>
+
+    <div class="plan-sliders">
+      <div class="plan-sliders-title">Weekly schedule</div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Long run</span>
+        <select class="plan-schedule-select" id="h-sl-day-long" data-role="long">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun" selected>Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Intervals</span>
+        <select class="plan-schedule-select" id="h-sl-day-intervals" data-role="intervals">
+          <option value="Mon">Monday</option><option value="Tue" selected>Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Easy run</span>
+        <select class="plan-schedule-select" id="h-sl-day-easy" data-role="easy">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed" selected>Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Threshold / tempo</span>
+        <select class="plan-schedule-select" id="h-sl-day-tempo" data-role="tempo">
+          <option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri" selected>Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-row">
+        <span class="plan-slider-label">Strength</span>
+        <select class="plan-schedule-select" id="h-sl-day-strength" data-role="strength">
+          <option value="" selected>None — I'll do my own</option><option value="Mon">Monday</option><option value="Tue">Tuesday</option><option value="Wed">Wednesday</option><option value="Thu">Thursday</option><option value="Fri">Friday</option><option value="Sat">Saturday</option><option value="Sun">Sunday</option>
+        </select>
+      </div>
+      <div class="plan-schedule-note">Remaining days are rest. Picking a day already in use swaps it with whichever session had it. This applies to the Base, Build and Sharpen phases — Taper stays fixed around race day.</div>
     </div>
 
     <div class="plan-metrics">

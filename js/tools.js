@@ -245,6 +245,50 @@ function renderWeeks(weeks, containerId, overrides, onOverrideChange) {
 }
 
 /**
+ * Applies a default weekly schedule (which day each session type falls on) to a list
+ * of weeks. Only meant for Base/Build/Sharpen weeks, which always carry exactly one
+ * of each role — Taper (race week included) keeps its own fixed day layout since it's
+ * anchored to race day. `schedule.strength` may be null/empty to drop it (turns into
+ * a rest day) for someone doing their own strength work outside the plan.
+ */
+function remapWeekDays(weeksArr, schedule) {
+  return weeksArr.map((w) => {
+    const days = w.days.map((day) => ({ ...day }));
+    if (!schedule.strength) {
+      days.forEach((day) => {
+        if (day.t === "strength") {
+          day.t = "rest";
+          day.w = "Rest — or your own strength session";
+        }
+      });
+    }
+
+    const used = new Set();
+    const unassigned = [];
+    days.forEach((day) => {
+      const d = schedule[day.t];
+      if (d) {
+        day.d = d;
+        used.add(d);
+      } else {
+        unassigned.push(day);
+      }
+    });
+    const leftover = DAY_ORDER.filter((d) => !used.has(d));
+
+    // a tune-up race day gets first pick of a weekend slot, if one's free
+    unassigned.sort((a, b) => (a.t === "race" ? -1 : b.t === "race" ? 1 : 0));
+    unassigned.forEach((day) => {
+      let idx = day.t === "race" ? leftover.findIndex((d) => d === "Sat" || d === "Sun") : -1;
+      if (idx === -1) idx = 0;
+      day.d = leftover.splice(idx, 1)[0];
+    });
+
+    return { ...w, days };
+  });
+}
+
+/**
  * Wires up one training-plan tool instance (sliders, tabs, week lists).
  * @param {string} idPrefix  "" for the 10k plan, "h-" for the half marathon plan
  * @param {number} distanceKm  race distance the plan is built for
@@ -271,6 +315,44 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
       localStorage.setItem(dayStorageKey, JSON.stringify(dayOverrides));
     } catch {}
   }
+
+  // Default weekly schedule — which day each session type falls on. Persisted like
+  // the per-week overrides above; falls back to whatever the selects show in HTML.
+  const scheduleSelects = { long: id("sl-day-long"), intervals: id("sl-day-intervals"), easy: id("sl-day-easy"), tempo: id("sl-day-tempo"), strength: id("sl-day-strength") };
+  const scheduleStorageKey = "rda-plan-schedule-" + (idPrefix || "10k");
+  let schedule;
+  try {
+    schedule = JSON.parse(localStorage.getItem(scheduleStorageKey));
+  } catch {
+    schedule = null;
+  }
+  if (!schedule) {
+    schedule = {};
+    Object.entries(scheduleSelects).forEach(([role, elId]) => (schedule[role] = document.getElementById(elId).value || null));
+  } else {
+    Object.entries(scheduleSelects).forEach(([role, elId]) => (document.getElementById(elId).value = schedule[role] || ""));
+  }
+  function saveSchedule() {
+    try {
+      localStorage.setItem(scheduleStorageKey, JSON.stringify(schedule));
+    } catch {}
+  }
+  Object.entries(scheduleSelects).forEach(([role, elId]) => {
+    document.getElementById(elId).addEventListener("change", (e) => {
+      const newDay = e.target.value || null;
+      if (newDay) {
+        const conflictRole = Object.keys(schedule).find((r) => r !== role && schedule[r] === newDay);
+        if (conflictRole) {
+          schedule[conflictRole] = schedule[role];
+          const conflictEl = document.getElementById(scheduleSelects[conflictRole]);
+          conflictEl.value = schedule[conflictRole] || "";
+        }
+      }
+      schedule[role] = newDay;
+      saveSchedule();
+      generatePlan();
+    });
+  });
 
   let planTarget = parseInt(document.getElementById(id("sl-target")).value),
     planCurrent = parseInt(document.getElementById(id("sl-current")).value),
@@ -305,9 +387,9 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
     document.getElementById(id("ph3-race")).textContent = fmtMSS(phaseInfo.taper.race);
     document.getElementById(id("ph3-vol")).textContent = phaseInfo.taper.vol;
 
-    renderWeeks(weeks.base, id("tp-phase0-weeks"), dayOverrides, saveDayOverrides);
-    renderWeeks(weeks.build, id("tp-phase1-weeks"), dayOverrides, saveDayOverrides);
-    renderWeeks(weeks.sharp, id("tp-phase2-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(remapWeekDays(weeks.base, schedule), id("tp-phase0-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(remapWeekDays(weeks.build, schedule), id("tp-phase1-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(remapWeekDays(weeks.sharp, schedule), id("tp-phase2-weeks"), dayOverrides, saveDayOverrides);
     renderWeeks(weeks.taper, id("tp-phase3-weeks"), dayOverrides, saveDayOverrides);
 
     const allLabels = [...tabLabels, "Strength", "Injury rules"];
