@@ -156,9 +156,14 @@
 
 <!-- 10K TRAINING PLAN -->
 <section class="section" id="plan">
-  <div class="section-label">Tool 04</div>
-  <div class="section-title" id="plan-title">10k training plan</div>
-  <div class="section-desc" id="plan-desc">Adjust the sliders to personalise your plan — all paces, distances, and session details update automatically.</div>
+  <div class="tool-header">
+    <div>
+      <div class="section-label">Tool 04</div>
+      <div class="section-title" id="plan-title">10k training plan</div>
+      <div class="section-desc" id="plan-desc">Adjust the sliders to personalise your plan — all paces, distances, and session details update automatically.</div>
+    </div>
+    <button type="button" class="btn btn-sm" id="sl-edit-schedule-btn">Edit schedule</button>
+  </div>
 
   <div class="card">
 
@@ -181,7 +186,7 @@
       </div>
     </div>
 
-    <div class="plan-sliders">
+    <div class="plan-sliders" id="sl-schedule-block" hidden>
       <div class="plan-sliders-title">Weekly schedule</div>
       <div class="plan-schedule-row">
         <span class="plan-slider-label">Long run</span>
@@ -337,9 +342,14 @@
 
 <!-- HALF MARATHON TRAINING PLAN -->
 <section class="section" id="hplan">
-  <div class="section-label">Tool 05</div>
-  <div class="section-title" id="hplan-title">Half marathon training plan</div>
-  <div class="section-desc" id="hplan-desc">Adjust the sliders to personalise your plan — all paces, distances, and session details update automatically.</div>
+  <div class="tool-header">
+    <div>
+      <div class="section-label">Tool 05</div>
+      <div class="section-title" id="hplan-title">Half marathon training plan</div>
+      <div class="section-desc" id="hplan-desc">Adjust the sliders to personalise your plan — all paces, distances, and session details update automatically.</div>
+    </div>
+    <button type="button" class="btn btn-sm" id="h-sl-edit-schedule-btn">Edit schedule</button>
+  </div>
 
   <div class="card">
 
@@ -362,7 +372,7 @@
       </div>
     </div>
 
-    <div class="plan-sliders">
+    <div class="plan-sliders" id="h-sl-schedule-block" hidden>
       <div class="plan-sliders-title">Weekly schedule</div>
       <div class="plan-schedule-row">
         <span class="plan-slider-label">Long run</span>

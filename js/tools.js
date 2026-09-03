@@ -301,6 +301,11 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
   const tabButtons = [...document.getElementById(tabsId).querySelectorAll(".tp-phase-btn")];
   const panelIds = tabButtons.map((b) => b.dataset.tp);
 
+  const scheduleBlock = document.getElementById(id("sl-schedule-block"));
+  document.getElementById(id("sl-edit-schedule-btn")).addEventListener("click", () => {
+    scheduleBlock.hidden = !scheduleBlock.hidden;
+  });
+
   // Per-week day swaps (e.g. moving the long run off a busy Saturday), keyed by
   // absolute week number and kept across regenerations/reloads.
   const dayStorageKey = "rda-plan-days-" + (idPrefix || "10k");
