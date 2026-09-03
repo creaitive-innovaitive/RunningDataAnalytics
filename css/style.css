@@ -115,10 +115,10 @@ button { font-family:inherit; }
 .section-desc { font-size:14px; color:var(--muted); margin-bottom:20px; max-width:500px; }
 .divider { border:none; border-top:1px solid var(--border); margin:32px auto; max-width:716px; }
 
-.tool-header { display:flex; justify-content:space-between; align-items:center; gap:32px; }
+.tool-header { display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:nowrap; }
 .tool-header > div:first-child { min-width:0; }
 .tool-header .btn-sm { flex-shrink:0; }
-@media (max-width:560px) { .tool-header { flex-wrap:wrap; } .tool-header .btn-sm { margin-top:4px; } }
+@media (max-width:480px) { .tool-header { gap:12px; } .tool-header .btn-sm { padding:8px 12px; } }
 
 .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:16px; box-shadow:var(--shadow); }
 .card-sm { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; }

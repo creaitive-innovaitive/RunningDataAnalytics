@@ -302,8 +302,18 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
   const panelIds = tabButtons.map((b) => b.dataset.tp);
 
   const scheduleBlock = document.getElementById(id("sl-schedule-block"));
-  document.getElementById(id("sl-edit-schedule-btn")).addEventListener("click", () => {
-    scheduleBlock.hidden = !scheduleBlock.hidden;
+  const scheduleBtn = document.getElementById(id("sl-edit-schedule-btn"));
+  const toolTitle = scheduleBtn.closest("section").querySelector(".section-title");
+  function scrollToTop(el) {
+    const navH = window.matchMedia("(min-width:769px)").matches ? 56 : 0;
+    const y = el.getBoundingClientRect().top + window.scrollY - navH - 16;
+    window.scrollTo({ top: Math.max(y, 0), behavior: "smooth" });
+  }
+  scheduleBtn.addEventListener("click", () => {
+    const opening = scheduleBlock.hidden;
+    scheduleBlock.hidden = !opening;
+    scheduleBtn.textContent = opening ? "Close" : "Edit schedule";
+    requestAnimationFrame(() => scrollToTop(opening ? scheduleBlock : toolTitle));
   });
 
   // Per-week day swaps (e.g. moving the long run off a busy Saturday), keyed by
