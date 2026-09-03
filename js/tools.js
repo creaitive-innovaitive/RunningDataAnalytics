@@ -442,11 +442,3 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
 
 initPlanTool("", 10, (m) => m + ":00");
 initPlanTool("h-", 21.0975, fmtHMS);
-
-/* ── SUBNAV ── */
-document.querySelectorAll(".tools-subnav a").forEach((a) => {
-  a.addEventListener("click", function () {
-    document.querySelectorAll(".tools-subnav a").forEach((x) => x.classList.remove("active"));
-    this.classList.add("active");
-  });
-});
