@@ -181,7 +181,15 @@ const badgeMap = {
   rest: { cls: "tp-badge-rest", label: "Rest" },
 };
 
-function renderWeeks(weeks, containerId) {
+const DAY_ORDER = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/**
+ * Renders one phase's week list. `overrides` maps week number -> a 7-entry array of
+ * day labels (parallel to the week's Mon..Sun-ordered `days`), letting a run be moved
+ * to a different day without changing what the session actually is. `onOverrideChange`
+ * persists the overrides object after each edit.
+ */
+function renderWeeks(weeks, containerId, overrides, onOverrideChange) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = "";
@@ -191,12 +199,21 @@ function renderWeeks(weeks, containerId) {
       cId = containerId + "-c" + wi;
     const div = document.createElement("div");
     div.className = "tp-week-row";
-    const daysHtml = w.days
-      .map((day) => {
+
+    const override = overrides[w.week];
+    const displayDays = w.days.map((day, i) => (override ? override[i] : day.d));
+    // show rows in calendar order even though the swap only touches labels
+    const order = w.days.map((_, i) => i).sort((a, b) => DAY_ORDER.indexOf(displayDays[a]) - DAY_ORDER.indexOf(displayDays[b]));
+
+    const daysHtml = order
+      .map((i) => {
+        const day = w.days[i];
         const bm = badgeMap[day.t] || badgeMap.rest;
-        return `<div class="tp-day-row"><div class="tp-day-name">${day.d}</div><span class="tp-day-badge ${bm.cls}">${bm.label}</span><div class="tp-day-work${day.t === "rest" ? " is-rest" : ""}">${day.w}</div></div>`;
+        const options = DAY_ORDER.map((d) => `<option value="${d}"${d === displayDays[i] ? " selected" : ""}>${d}</option>`).join("");
+        return `<div class="tp-day-row" data-idx="${i}"><select class="tp-day-select" aria-label="Day">${options}</select><span class="tp-day-badge ${bm.cls}">${bm.label}</span><div class="tp-day-work${day.t === "rest" ? " is-rest" : ""}">${day.w}</div></div>`;
       })
       .join("");
+
     div.innerHTML = `<div class="tp-week-header" id="${wId}"><span class="tp-week-num">Week ${w.week}</span><span class="tp-week-focus">${w.focus}</span><span class="tp-week-km">${w.km}</span><span class="tp-week-chevron" id="${cId}">▶</span></div><div class="tp-week-detail" id="${dId}"><div class="tp-day-grid">${daysHtml}</div></div>`;
     container.appendChild(div);
     document.getElementById(wId).addEventListener("click", () => {
@@ -204,6 +221,25 @@ function renderWeeks(weeks, containerId) {
         chev = document.getElementById(cId);
       const open = detail.classList.toggle("open");
       chev.classList.toggle("open", open);
+    });
+
+    div.querySelectorAll(".tp-day-select").forEach((sel) => {
+      sel.addEventListener("click", (e) => e.stopPropagation());
+      sel.addEventListener("change", (e) => {
+        const idx = parseInt(sel.closest(".tp-day-row").dataset.idx);
+        const newDay = e.target.value;
+        const current = (overrides[w.week] || w.days.map((d) => d.d)).slice();
+        const swapIdx = current.indexOf(newDay);
+        [current[idx], current[swapIdx]] = [newDay, current[idx]];
+        overrides[w.week] = current;
+        onOverrideChange();
+        const wasOpen = document.getElementById(dId).classList.contains("open");
+        renderWeeks(weeks, containerId, overrides, onOverrideChange);
+        if (wasOpen) {
+          document.getElementById(containerId + "-d" + wi).classList.add("open");
+          document.getElementById(containerId + "-c" + wi).classList.add("open");
+        }
+      });
     });
   });
 }
@@ -220,6 +256,21 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
   const stPrefix = idPrefix ? "hst" : "st";
   const tabButtons = [...document.getElementById(tabsId).querySelectorAll(".tp-phase-btn")];
   const panelIds = tabButtons.map((b) => b.dataset.tp);
+
+  // Per-week day swaps (e.g. moving the long run off a busy Saturday), keyed by
+  // absolute week number and kept across regenerations/reloads.
+  const dayStorageKey = "rda-plan-days-" + (idPrefix || "10k");
+  let dayOverrides;
+  try {
+    dayOverrides = JSON.parse(localStorage.getItem(dayStorageKey)) || {};
+  } catch {
+    dayOverrides = {};
+  }
+  function saveDayOverrides() {
+    try {
+      localStorage.setItem(dayStorageKey, JSON.stringify(dayOverrides));
+    } catch {}
+  }
 
   let planTarget = parseInt(document.getElementById(id("sl-target")).value),
     planCurrent = parseInt(document.getElementById(id("sl-current")).value),
@@ -254,10 +305,10 @@ function initPlanTool(idPrefix, distanceKm, fmtTime) {
     document.getElementById(id("ph3-race")).textContent = fmtMSS(phaseInfo.taper.race);
     document.getElementById(id("ph3-vol")).textContent = phaseInfo.taper.vol;
 
-    renderWeeks(weeks.base, id("tp-phase0-weeks"));
-    renderWeeks(weeks.build, id("tp-phase1-weeks"));
-    renderWeeks(weeks.sharp, id("tp-phase2-weeks"));
-    renderWeeks(weeks.taper, id("tp-phase3-weeks"));
+    renderWeeks(weeks.base, id("tp-phase0-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(weeks.build, id("tp-phase1-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(weeks.sharp, id("tp-phase2-weeks"), dayOverrides, saveDayOverrides);
+    renderWeeks(weeks.taper, id("tp-phase3-weeks"), dayOverrides, saveDayOverrides);
 
     const allLabels = [...tabLabels, "Strength", "Injury rules"];
     tabButtons.forEach((btn, i) => {
