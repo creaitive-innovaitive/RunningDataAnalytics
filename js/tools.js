@@ -170,11 +170,7 @@ function calcZones() {
 document.getElementById("hr-slider").addEventListener("input", calcZones);
 calcZones();
 
-/* ── 10K TRAINING PLAN (via plan-engine.js) ── */
-let planTarget = 50,
-  planCurrent = 59,
-  planWeeks = 19;
-
+/* ── TRAINING PLANS (via plan-engine.js) — shared by 10k and half marathon tools ── */
 const badgeMap = {
   easy: { cls: "tp-badge-easy", label: "Easy" },
   long: { cls: "tp-badge-long", label: "Long" },
@@ -212,81 +208,102 @@ function renderWeeks(weeks, containerId) {
   });
 }
 
-function generatePlan() {
-  const plan = computeTrainingPlan(planTarget * 60, 10, planCurrent * 60, planWeeks);
-  const { paces, phaseInfo, weeks, tabLabels } = plan;
+/**
+ * Wires up one training-plan tool instance (sliders, tabs, week lists).
+ * @param {string} idPrefix  "" for the 10k plan, "h-" for the half marathon plan
+ * @param {number} distanceKm  race distance the plan is built for
+ */
+function initPlanTool(idPrefix, distanceKm, fmtTime) {
+  const id = (s) => idPrefix + s;
+  const tabsId = idPrefix ? idPrefix.replace(/-$/, "") + "TpPhaseTabs" : "tpPhaseTabs";
+  const strengthTabsId = idPrefix ? idPrefix.replace(/-$/, "") + "StrengthSubTabs" : "strengthSubTabs";
+  const stPrefix = idPrefix ? "hst" : "st";
+  const tabButtons = [...document.getElementById(tabsId).querySelectorAll(".tp-phase-btn")];
+  const panelIds = tabButtons.map((b) => b.dataset.tp);
 
-  document.getElementById("pm-race").textContent = fmtMSS(paces.race);
-  document.getElementById("pm-int").textContent = fmtMSS(paces.intC);
-  document.getElementById("pm-thresh").textContent = fmtMSS(paces.thresh);
-  document.getElementById("pm-easy").textContent = fmtMSS(paces.easy);
+  let planTarget = parseInt(document.getElementById(id("sl-target")).value),
+    planCurrent = parseInt(document.getElementById(id("sl-current")).value),
+    planWeeks = parseInt(document.getElementById(id("sl-weeks")).value);
 
-  document.getElementById("ph0-easy").textContent = paceRange(...phaseInfo.base.easy);
-  document.getElementById("ph0-thresh").textContent = paceRange(...phaseInfo.base.thresh);
-  document.getElementById("ph0-int").textContent = paceRange(...phaseInfo.base.int);
-  document.getElementById("ph0-vol").textContent = phaseInfo.base.vol;
+  function generatePlan() {
+    const plan = computeTrainingPlan(planTarget * 60, distanceKm, planCurrent * 60, planWeeks);
+    const { paces, phaseInfo, weeks, tabLabels } = plan;
 
-  document.getElementById("ph1-easy").textContent = paceRange(...phaseInfo.build.easy);
-  document.getElementById("ph1-thresh").textContent = paceRange(...phaseInfo.build.thresh);
-  document.getElementById("ph1-int").textContent = paceRange(...phaseInfo.build.int);
-  document.getElementById("ph1-vol").textContent = phaseInfo.build.vol;
+    document.getElementById(id("pm-race")).textContent = fmtMSS(paces.race);
+    document.getElementById(id("pm-int")).textContent = fmtMSS(paces.intC);
+    document.getElementById(id("pm-thresh")).textContent = fmtMSS(paces.thresh);
+    document.getElementById(id("pm-easy")).textContent = fmtMSS(paces.easy);
 
-  document.getElementById("ph2-easy").textContent = paceRange(...phaseInfo.sharp.easy);
-  document.getElementById("ph2-thresh").textContent = paceRange(...phaseInfo.sharp.thresh);
-  document.getElementById("ph2-int").textContent = paceRange(...phaseInfo.sharp.int);
-  document.getElementById("ph2-vol").textContent = phaseInfo.sharp.vol;
+    document.getElementById(id("ph0-easy")).textContent = paceRange(...phaseInfo.base.easy);
+    document.getElementById(id("ph0-thresh")).textContent = paceRange(...phaseInfo.base.thresh);
+    document.getElementById(id("ph0-int")).textContent = paceRange(...phaseInfo.base.int);
+    document.getElementById(id("ph0-vol")).textContent = phaseInfo.base.vol;
 
-  document.getElementById("ph3-easy").textContent = paceRange(...phaseInfo.taper.easy);
-  document.getElementById("ph3-strides").textContent = "~" + fmtMSS(phaseInfo.taper.strides);
-  document.getElementById("ph3-race").textContent = fmtMSS(phaseInfo.taper.race);
-  document.getElementById("ph3-vol").textContent = phaseInfo.taper.vol;
+    document.getElementById(id("ph1-easy")).textContent = paceRange(...phaseInfo.build.easy);
+    document.getElementById(id("ph1-thresh")).textContent = paceRange(...phaseInfo.build.thresh);
+    document.getElementById(id("ph1-int")).textContent = paceRange(...phaseInfo.build.int);
+    document.getElementById(id("ph1-vol")).textContent = phaseInfo.build.vol;
 
-  renderWeeks(weeks.base, "tp-phase0-weeks");
-  renderWeeks(weeks.build, "tp-phase1-weeks");
-  renderWeeks(weeks.sharp, "tp-phase2-weeks");
-  renderWeeks(weeks.taper, "tp-phase3-weeks");
+    document.getElementById(id("ph2-easy")).textContent = paceRange(...phaseInfo.sharp.easy);
+    document.getElementById(id("ph2-thresh")).textContent = paceRange(...phaseInfo.sharp.thresh);
+    document.getElementById(id("ph2-int")).textContent = paceRange(...phaseInfo.sharp.int);
+    document.getElementById(id("ph2-vol")).textContent = phaseInfo.sharp.vol;
 
-  const allLabels = [...tabLabels, "Strength", "Injury rules"];
-  document.querySelectorAll(".tp-phase-btn").forEach((btn, i) => {
-    if (allLabels[i]) btn.textContent = allLabels[i];
+    document.getElementById(id("ph3-easy")).textContent = paceRange(...phaseInfo.taper.easy);
+    document.getElementById(id("ph3-strides")).textContent = "~" + fmtMSS(phaseInfo.taper.strides);
+    document.getElementById(id("ph3-race")).textContent = fmtMSS(phaseInfo.taper.race);
+    document.getElementById(id("ph3-vol")).textContent = phaseInfo.taper.vol;
+
+    renderWeeks(weeks.base, id("tp-phase0-weeks"));
+    renderWeeks(weeks.build, id("tp-phase1-weeks"));
+    renderWeeks(weeks.sharp, id("tp-phase2-weeks"));
+    renderWeeks(weeks.taper, id("tp-phase3-weeks"));
+
+    const allLabels = [...tabLabels, "Strength", "Injury rules"];
+    tabButtons.forEach((btn, i) => {
+      if (allLabels[i]) btn.textContent = allLabels[i];
+    });
+  }
+
+  document.getElementById(id("sl-target")).addEventListener("input", (e) => {
+    planTarget = parseInt(e.target.value);
+    document.getElementById(id("sv-target")).textContent = fmtTime(planTarget);
+    generatePlan();
+  });
+  document.getElementById(id("sl-current")).addEventListener("input", (e) => {
+    planCurrent = parseInt(e.target.value);
+    document.getElementById(id("sv-current")).textContent = fmtTime(planCurrent);
+    generatePlan();
+  });
+  document.getElementById(id("sl-weeks")).addEventListener("input", (e) => {
+    planWeeks = parseInt(e.target.value);
+    document.getElementById(id("sv-weeks")).textContent = planWeeks + " wks";
+    generatePlan();
+  });
+
+  generatePlan();
+
+  document.getElementById(tabsId).addEventListener("click", (e) => {
+    const btn = e.target.closest(".tp-phase-btn");
+    if (!btn) return;
+    const target = btn.dataset.tp;
+    tabButtons.forEach((b) => b.classList.toggle("active", b === btn));
+    panelIds.forEach((pid) => document.getElementById(pid).classList.toggle("active", pid === target));
+  });
+
+  document.getElementById(strengthTabsId).addEventListener("click", (e) => {
+    const btn = e.target.closest(".tp-sub-btn");
+    if (!btn) return;
+    const target = btn.dataset.st;
+    document.querySelectorAll("#" + strengthTabsId + " .tp-sub-btn").forEach((b) => b.classList.toggle("active", b === btn));
+    [stPrefix + "A", stPrefix + "B", stPrefix + "C"].forEach((elId) => {
+      document.getElementById(elId).style.display = elId === target ? "grid" : "none";
+    });
   });
 }
 
-document.getElementById("sl-target").addEventListener("input", (e) => {
-  planTarget = parseInt(e.target.value);
-  document.getElementById("sv-target").textContent = planTarget + ":00";
-  generatePlan();
-});
-document.getElementById("sl-current").addEventListener("input", (e) => {
-  planCurrent = parseInt(e.target.value);
-  document.getElementById("sv-current").textContent = planCurrent + ":00";
-  generatePlan();
-});
-document.getElementById("sl-weeks").addEventListener("input", (e) => {
-  planWeeks = parseInt(e.target.value);
-  document.getElementById("sv-weeks").textContent = planWeeks + " wks";
-  generatePlan();
-});
-
-generatePlan();
-
-document.getElementById("tpPhaseTabs").addEventListener("click", (e) => {
-  const btn = e.target.closest(".tp-phase-btn");
-  if (!btn) return;
-  const target = btn.dataset.tp;
-  document.querySelectorAll(".tp-phase-btn").forEach((b) => b.classList.toggle("active", b === btn));
-  document.querySelectorAll(".tp-panel").forEach((p) => p.classList.toggle("active", p.id === target));
-});
-
-document.getElementById("strengthSubTabs").addEventListener("click", (e) => {
-  const btn = e.target.closest(".tp-sub-btn");
-  if (!btn) return;
-  const target = btn.dataset.st;
-  document.querySelectorAll(".tp-sub-btn").forEach((b) => b.classList.toggle("active", b === btn));
-  ["stA", "stB", "stC"].forEach((id) => {
-    document.getElementById(id).style.display = id === target ? "grid" : "none";
-  });
-});
+initPlanTool("", 10, (m) => m + ":00");
+initPlanTool("h-", 21.0975, fmtHMS);
 
 /* ── SUBNAV ── */
 document.querySelectorAll(".tools-subnav a").forEach((a) => {

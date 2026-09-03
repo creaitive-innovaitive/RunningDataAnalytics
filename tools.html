@@ -27,6 +27,7 @@
     <div class="hero-tool-badge">Pace calculator</div>
     <div class="hero-tool-badge">HR zones</div>
     <div class="hero-tool-badge">10k training plan</div>
+    <div class="hero-tool-badge">Half marathon plan</div>
     <div class="hero-tool-badge">VO2 max guide</div>
   </div>
 </section>
@@ -36,6 +37,7 @@
   <a href="#pace">Pace</a>
   <a href="#zones">HR Zones</a>
   <a href="#plan">10k Plan</a>
+  <a href="#hplan">Half Plan</a>
   <a href="#guide">Guide</a>
 </nav>
 
@@ -262,6 +264,152 @@
     </div>
 
     <div class="tp-panel" id="plan5">
+      <div class="tp-injury-box">
+        <div class="tp-injury-title">Prevention rules</div>
+        <ul class="tp-injury-list">
+          <li>Never increase weekly km more than 10% week-on-week</li>
+          <li>Every 4th week is a deload — cut volume 30–40%</li>
+          <li>Resting HR 8+ bpm above normal: take the day off</li>
+          <li>Pain above 3/10 in any joint: stop the session</li>
+          <li>Soreness in muscle = ok. Pain in tendon or joint = stop</li>
+          <li>Never run two hard sessions back-to-back</li>
+          <li>Warm up 10 min easy before every speed session</li>
+          <li>Cool down 10 min easy + 5 min stretching after every run</li>
+        </ul>
+      </div>
+      <div class="tp-strength-grid" style="margin-bottom:14px">
+        <div class="tp-strength-card"><div class="tp-strength-title">1–3 days of discomfort</div><ul class="tp-strength-list"><li>Swap hard session for easy or rest</li><li>Ice 15 min after activity (not before)</li><li>Continue strength work if pain-free</li><li>Resume plan if pain gone within 3 days</li></ul></div>
+        <div class="tp-strength-card"><div class="tp-strength-title">4+ days or recurring pain</div><ul class="tp-strength-list"><li>Stop running. Maintain fitness with cycling or swimming</li><li>See a physio before resuming</li><li>Re-enter plan 2 phases back</li><li>Losing 2 weeks ≠ losing the goal. Panic does.</li></ul></div>
+      </div>
+      <div class="tp-strength-card">
+        <div class="tp-strength-title">Weekly schedule</div>
+        <ul class="tp-strength-list">
+          <li><strong>Monday</strong> — Intervals</li>
+          <li><strong>Tuesday</strong> — Rest (or Strength B)</li>
+          <li><strong>Wednesday</strong> — Easy run</li>
+          <li><strong>Thursday</strong> — Threshold / tempo</li>
+          <li><strong>Friday</strong> — Rest (or Strength C)</li>
+          <li><strong>Saturday</strong> — Long run</li>
+          <li><strong>Sunday</strong> — Rest (or Strength A)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HALF MARATHON TRAINING PLAN -->
+<section class="section" id="hplan">
+  <div class="section-label">Tool 05</div>
+  <div class="section-title" id="hplan-title">Half marathon training plan</div>
+  <div class="section-desc" id="hplan-desc">Adjust the sliders to personalise your plan — all paces, distances, and session details update automatically.</div>
+
+  <div class="card">
+
+    <div class="plan-sliders">
+      <div class="plan-sliders-title">Your settings</div>
+      <div class="plan-slider-row">
+        <span class="plan-slider-label">Race target</span>
+        <input type="range" id="h-sl-target" min="80" max="150" value="110" step="1">
+        <span class="plan-slider-val" id="h-sv-target">1:50:00</span>
+      </div>
+      <div class="plan-slider-row">
+        <span class="plan-slider-label">Current half</span>
+        <input type="range" id="h-sl-current" min="90" max="180" value="130" step="1">
+        <span class="plan-slider-val" id="h-sv-current">2:10:00</span>
+      </div>
+      <div class="plan-slider-row">
+        <span class="plan-slider-label">Weeks available</span>
+        <input type="range" id="h-sl-weeks" min="8" max="24" value="19" step="1">
+        <span class="plan-slider-val" id="h-sv-weeks">19 wks</span>
+      </div>
+    </div>
+
+    <div class="plan-metrics">
+      <div class="plan-metric"><div class="plan-metric-label">Race pace</div><div class="plan-metric-val" id="h-pm-race">5:00</div><div class="plan-metric-sub">per km target</div></div>
+      <div class="plan-metric"><div class="plan-metric-label">Intervals</div><div class="plan-metric-val" id="h-pm-int">4:50</div><div class="plan-metric-sub">per km · sharpen phase</div></div>
+      <div class="plan-metric"><div class="plan-metric-label">Threshold</div><div class="plan-metric-val" id="h-pm-thresh">5:15</div><div class="plan-metric-sub">per km · comfortably hard</div></div>
+      <div class="plan-metric"><div class="plan-metric-label">Easy / Long</div><div class="plan-metric-val" id="h-pm-easy">6:30</div><div class="plan-metric-sub">per km · conversational</div></div>
+    </div>
+
+    <div class="tp-phase-tabs" id="hTpPhaseTabs">
+      <button class="tp-phase-btn active" data-tp="hplan0">Phase 1 — Base</button>
+      <button class="tp-phase-btn" data-tp="hplan1">Phase 2 — Build</button>
+      <button class="tp-phase-btn" data-tp="hplan2">Phase 3 — Sharpen</button>
+      <button class="tp-phase-btn" data-tp="hplan3">Phase 4 — Taper</button>
+      <button class="tp-phase-btn" data-tp="hplan4">Strength</button>
+      <button class="tp-phase-btn" data-tp="hplan5">Injury rules</button>
+    </div>
+
+    <div class="tp-panel active" id="hplan0">
+      <div class="tp-phase-desc">Build aerobic capacity with conservative mileage. Easy pace is the priority. No heroics yet.</div>
+      <div class="tp-pace-grid">
+        <div class="tp-pace-card"><div class="tp-pace-label">Easy / Long</div><div class="tp-pace-val" id="h-ph0-easy">—</div><div class="tp-pace-sub">per km · conversational</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Threshold</div><div class="tp-pace-val" id="h-ph0-thresh">—</div><div class="tp-pace-sub">per km · comfortably hard</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Intervals</div><div class="tp-pace-val" id="h-ph0-int">—</div><div class="tp-pace-sub">per km · at goal pace</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Weekly volume</div><div class="tp-pace-val" id="h-ph0-vol">—</div><div class="tp-pace-sub">4 runs · &lt;10% increase</div></div>
+      </div>
+      <div class="tp-week-list" id="h-tp-phase0-weeks"></div>
+    </div>
+
+    <div class="tp-panel" id="hplan1">
+      <div class="tp-phase-desc">Progressive loading. Intervals get longer, tempo extends. Long run peaks. Deload every 4th week.</div>
+      <div class="tp-pace-grid">
+        <div class="tp-pace-card"><div class="tp-pace-label">Easy / Long</div><div class="tp-pace-val" id="h-ph1-easy">—</div><div class="tp-pace-sub">per km</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Threshold</div><div class="tp-pace-val" id="h-ph1-thresh">—</div><div class="tp-pace-sub">per km · 20–25 min blocks</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Intervals (1 km)</div><div class="tp-pace-val" id="h-ph1-int">—</div><div class="tp-pace-sub">per km · 5–6 reps</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Weekly volume</div><div class="tp-pace-val" id="h-ph1-vol">—</div><div class="tp-pace-sub">peak load phase</div></div>
+      </div>
+      <div class="tp-week-list" id="h-tp-phase1-weeks"></div>
+    </div>
+
+    <div class="tp-panel" id="hplan2">
+      <div class="tp-phase-desc">Race-specific sharpening. Intervals at or faster than goal pace. Tune-up 5k in the middle. Quality over quantity.</div>
+      <div class="tp-pace-grid">
+        <div class="tp-pace-card"><div class="tp-pace-label">Easy / Long</div><div class="tp-pace-val" id="h-ph2-easy">—</div><div class="tp-pace-sub">per km</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Threshold</div><div class="tp-pace-val" id="h-ph2-thresh">—</div><div class="tp-pace-sub">per km · 25–30 min</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Intervals (1 km)</div><div class="tp-pace-val" id="h-ph2-int">—</div><div class="tp-pace-sub">per km · sub goal pace</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Weekly volume</div><div class="tp-pace-val" id="h-ph2-vol">—</div><div class="tp-pace-sub">held then reducing</div></div>
+      </div>
+      <div class="tp-week-list" id="h-tp-phase2-weeks"></div>
+    </div>
+
+    <div class="tp-panel" id="hplan3">
+      <div class="tp-phase-desc">Volume drops sharply. Keep intensity but shorten sessions. Trust the training — your legs need to feel fresh on race day.</div>
+      <div class="tp-pace-grid">
+        <div class="tp-pace-card"><div class="tp-pace-label">Easy</div><div class="tp-pace-val" id="h-ph3-easy">—</div><div class="tp-pace-sub">per km · feel fresh</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Strides (100 m)</div><div class="tp-pace-val" id="h-ph3-strides">—</div><div class="tp-pace-sub">per km · leg speed</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Race goal</div><div class="tp-pace-val" id="h-ph3-race">—</div><div class="tp-pace-sub">per km on the day</div></div>
+        <div class="tp-pace-card"><div class="tp-pace-label">Weekly volume</div><div class="tp-pace-val" id="h-ph3-vol">—</div><div class="tp-pace-sub">taper — trust it</div></div>
+      </div>
+      <div class="tp-week-list" id="h-tp-phase3-weeks"></div>
+    </div>
+
+    <div class="tp-panel" id="hplan4">
+      <div class="tp-phase-desc">Home workouts on non-running days (Tue, Fri, Sun). Focus on glutes, single-leg stability, core, and hip flexors. 30–40 min per session. Rotate A → B → C.</div>
+      <div class="tp-sub-tabs" id="hStrengthSubTabs">
+        <button class="tp-sub-btn active" data-st="hstA">Session A — Glute & Hip</button>
+        <button class="tp-sub-btn" data-st="hstB">Session B — Core & Stability</button>
+        <button class="tp-sub-btn" data-st="hstC">Session C — Mobility</button>
+      </div>
+      <div id="hstA" class="tp-strength-grid">
+        <div class="tp-strength-card"><div class="tp-strength-title">Glute activation (10 min)</div><ul class="tp-strength-list"><li>Glute bridges — 3×15 reps</li><li>Single-leg glute bridge — 3×10 each</li><li>Clamshells with band — 3×15 each</li><li>Side-lying hip abduction — 3×15 each</li><li>Donkey kicks — 2×15 each</li></ul></div>
+        <div class="tp-strength-card"><div class="tp-strength-title">Hip & knee strength (20 min)</div><ul class="tp-strength-list"><li>Bulgarian split squat (bodyweight) — 3×8 each</li><li>Reverse lunge — 3×10 each</li><li>Step-ups onto chair — 3×10 each</li><li>Wall sit — 3×30 sec</li><li>Lateral band walks — 3×12 each way</li></ul></div>
+      </div>
+      <div id="hstB" class="tp-strength-grid" style="display:none">
+        <div class="tp-strength-card"><div class="tp-strength-title">Core (15 min)</div><ul class="tp-strength-list"><li>Dead bug — 3×10 each side</li><li>Bird dog — 3×10 each side</li><li>Plank — 3×30–45 sec</li><li>Side plank — 2×20 sec each</li><li>Pallof press (band) — 3×12 each</li></ul></div>
+        <div class="tp-strength-card"><div class="tp-strength-title">Single-leg stability (20 min)</div><ul class="tp-strength-list"><li>Single-leg balance — 3×30 sec each</li><li>Single-leg squat (to chair) — 3×8 each</li><li>Single-leg calf raise (straight knee) — 3×12 each</li><li>Single-leg calf raise (bent knee) — 3×12 each</li><li>Heel walks + toe walks — 2×20 m each</li></ul></div>
+      </div>
+      <div id="hstC" class="tp-strength-grid" style="display:none">
+        <div class="tp-strength-card"><div class="tp-strength-title">Hip flexor & IT band (20 min)</div><ul class="tp-strength-list"><li>90/90 hip stretch — 2 min each side</li><li>Pigeon pose — 2 min each side</li><li>Couch stretch — 90 sec each</li><li>Lateral hip opening — 2 min each</li><li>IT band foam roll — 60 sec each</li></ul></div>
+        <div class="tp-strength-card"><div class="tp-strength-title">Calf & lower leg (15 min)</div><ul class="tp-strength-list"><li>Calf foam roll — 60 sec each</li><li>Seated calf stretch — 90 sec each</li><li>Standing calf stretch — 90 sec each</li><li>Plantar fascia roll (ball) — 60 sec each</li><li>Ankle circles — 20 each direction</li></ul></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);">In Phase 3 reduce to 2 sessions/week. In taper: 1 session of mobility (C) only.</div>
+    </div>
+
+    <div class="tp-panel" id="hplan5">
       <div class="tp-injury-box">
         <div class="tp-injury-title">Prevention rules</div>
         <ul class="tp-injury-list">
